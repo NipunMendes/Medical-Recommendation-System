@@ -1,193 +1,432 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Load Tailwind CSS -->
-  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <!-- Load Tailwind CSS -->
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
 
-  <!-- Load Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Load Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <style>
-    .dropdown-menu {
-      display: none;
-    }
-    .dropdown-menu.show {
-      display: block;
-    }
-    .custom-rounded {
-      border-radius: 40px;
-    }
-    #loader {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      z-index: 1000;
-      width: 100px;
-      height: 100px;
-      margin: -50px 0 0 -50px;
-      border: 16px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 16px solid #3498db;
-      width: 120px;
-      height: 120px;
-      -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
-      display: none; /* Initially hide the loader */
-    }
+    <style>
+        .dropdown-menu {
+          display: none;
+        }
+        .dropdown-menu.show {
+          display: block;
+        }
+        .custom-rounded {
+          border-radius: 40px;
+        }
+        #loader {
+          position: fixed;
+          left: 50%;
+          top: 50%;
+          z-index: 1000;
+          width: 100px;
+          height: 100px;
+          margin: -50px 0 0 -50px;
+          border: 16px solid #f3f3f3;
+          border-radius: 50%;
+          border-top: 16px solid #3498db;
+          width: 120px;
+          height: 120px;
+          -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+          display: none; /* Initially hide the loader */
+        }
 
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
-    }
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
 
-    body.loading #loader {
-      display: block; /* Display loader only when body has 'loading' class */
-    }
+        body.loading #loader {
+          display: block;
+        }
 
-    body.loading #content {
-      visibility: hidden; /* Hide content when body has 'loading' class */
-    }
+        body.loading #content {
+          visibility: hidden;
+        }
 
-    body.loading {
-      overflow: hidden; /* Prevent scrolling when loading */
-    }
+        body.loading {
+          overflow: hidden;
+        }
 
-    .active-nav {
-      background-color: #4A5568; /* This can be adjusted to match your theme */
-      color: white !important;
+        .active-nav {
+          background-color: #4A5568;
+          color: white !important;
+        }
+
+        .mobile-menu {
+          display: none;
+        }
+        .mobile-menu.show {
+          display: block;
+        }
+
+        .toggle-button {
+          padding: 5px;
+          margin: 5px;
+          font-size: 20px;
+          font-weight: semi-bold;
+          width: 180px;
+          border-radius: 15px;
+          color: white;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .toggle-button img {
+          width: 150px;
+          height: 90px;
+          margin-bottom: 8px;
+          border-radius: 15px;
+        }
+          .list-group-item {
+        list-style-type: disc; /* Use disc for bullet points */
     }
-  </style>
+    </style>
 </head>
 <body class="loading">
 
 <div id="loader"></div>
 
 <div id="content">
-  <!--navbar-->
-  <nav class="bg-gray-800">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <!-- Mobile menu button-->
-          <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-            <span class="sr-only">Open main menu</span>
-            <!-- Icon when menu is closed -->
-            <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-            <!-- Icon when menu is open -->
-            <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex flex-shrink-0 items-center">
-            <img class="h-10 w-auto" src="/static/consultation.png" alt="Care Consult">
-          </div>
-          <div class="hidden sm:ml-6 sm:block">
-            <div class="flex space-x-4">
-              <a href="/" class="nav-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</a>
-              <a href="/index" class="nav-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Check Diseases</a>
-              <a href="/about" class="nav-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About us</a>
-              <a href="/blog" class="nav-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Blog</a>
-              <a href="/contact" class="nav-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact us</a>
+    <!--navbar-->
+    <nav class="bg-gray-800">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="relative flex h-16 items-center justify-between">
+                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                    <!-- Mobile menu button-->
+                    <button type="button"
+                            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                            aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Icon when menu is closed -->
+                        <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                        </svg>
+                        <!-- Icon when menu is open -->
+                        <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                    <div class="flex flex-shrink-0 items-center">
+                        <img class="h-10 w-auto" src="/static/consultation.png" alt="Care Consult">
+                    </div>
+                    <div class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4">
+                            <a href="/"
+                               class="nav-link rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</a>
+                            <a href="/index"
+                               class="nav-link rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Check
+                                Diseases</a>
+                            <a href="/about"
+                               class="nav-link rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About
+                                us</a>
+                            <a href="/blog"
+                               class="nav-link rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Blog</a>
+                            <a href="/contact"
+                               class="nav-link rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact
+                                us</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile dropdown -->
+                <div class="relative ml-3">
+                    <div>
+                        <button type="button"
+                                class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
 
-        <!-- Profile dropdown -->
-        <div class="relative ml-3">
-          <div>
-            <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-              <span class="sr-only">Open user menu</span>
-              <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+        <div class="sm:hidden mobile-menu" id="mobile-menu">
+            <div class="space-y-1 px-2 pt-2 pb-3">
+                <a href="/"
+                   class="nav-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</a>
+                <a href="/index"
+                   class="nav-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Check
+                    Diseases</a>
+                <a href="/about"
+                   class="nav-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About
+                    us</a>
+                <a href="/blog"
+                   class="nav-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Blog</a>
+                <a href="/contact"
+                   class="nav-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact
+                    us</a>
+            </div>
+        </div>
+
+    </nav>
+
+    <!--End of navbar-->
+
+    <h1 class="text-5xl text-center font-bold ">
+        Check Your Health Issues
+    </h1>
+
+    <div class="container mt-4 my-4"
+         style="background:darkslategray; color:white; border-radius:35px; max-width: 800px; padding:50px;">
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label for="symptoms" class="fw-semi-bold fs-4 mb-3">Type Your Symptoms Here 👇🏻</label>
+                <input type="text" class="form-control custom-rounded" name="symptoms"
+                       placeholder="Type symptoms like coughing,vomiting,itching...">
+            </div>
+            <br>
+            <button class="btn btn-primary rounded-pill">Check Recommendations</button>
+            {% if error %}
+            <div class="alert alert-danger mt-3" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if predicted_disease %}
+    <!-- Results -->
+
+    <h1 class="text-3xl text-center font-bold ">Our AI System Generated Results</h1>
+    <div class="container mt-4">
+        <div class="result-container d-flex flex-wrap justify-content-center">
+
+            <!-- Buttons to toggle display -->
+
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#diseaseModal"
+                    style="background:#303030;">
+                <img src="static/disease.jpg" alt="Disease Icon">
+                <span>Disease</span>
             </button>
-          </div>
-
-          <!-- Dropdown menu -->
-          <div id="dropdown-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dropdown-menu" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
-          </div>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#descriptionModal"
+                    style="background:#303030;">
+                <img src="static/description.jpg" alt="Description Icon">
+                <span>Description</span>
+            </button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#precautionModal"
+                    style="background:#303030;">
+                <img src="static/precaution.jpg" alt="Precaution Icon">
+                <span>Precaution</span>
+            </button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#medicationsModal"
+                    style="background:#303030;">
+                <img src="static/medication.jpg" alt="Medications Icon">
+                <span>Medications</span>
+            </button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#workoutsModal"
+                    style="background:#303030;">
+                <img src="static/workouts.jpg" alt="Workouts Icon">
+                <span>Workouts</span>
+            </button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#dietsModal"
+                    style="background:#303030;">
+                <img src="static/diet.jpg" alt="Diets Icon">
+                <span>Diets</span>
+            </button>
         </div>
-      </div>
-    </div>
-  </nav>
-
-  <!--End of navbar-->
-
-  <h1 class="text-5xl text-center font-bold ">
-    Check Your Diseases
-  </h1>
-
-  <div class="container mt-4 my-4" style="background:darkslategray; color:white; border-radius:35px; padding:50px;">
-      <form action="/predict" method="post">
-        <div class="form-group">
-          <label for="symptoms" class="fw-semi-bold fs-4 mb-3">Type Your Symptoms Here 👇🏻</label>
-          <input type="text" class="form-control custom-rounded" name="symptoms" placeholder="Type symptoms like coughing,vomiting,itching...">
-        </div>
-        <br>
-        <button class="btn btn-primary rounded-pill">Check Recommendations</button>
-        {% if error %}
-        <div class="alert alert-danger mt-3" role="alert">
-          {{ error }}
-        </div>
-        {% endif %}
-      </form>
     </div>
 
-    <p>{{predicted_disease}}</p>
+    {% endif %}
+
+    <!-- Disease Modal -->
+    <div class="modal fade" id="diseaseModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <!-- Set header background color inline -->
+                    <h5 class="modal-title" id="diseaseModalLabel">Predicted Disease</h5>
+                </div>
+                <div class="modal-body" style="background-color: #modal-body-color;">
+                    <!-- Set modal body background color inline -->
+                    <p>{{ predicted_disease }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Description Modal -->
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="descriptionModalLabel">Description</h5>
+                </div>
+                <div class="modal-body">
+                    <p>{{ dis_des }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Precaution Modal -->
+    <div class="modal fade" id="precautionModal" tabindex="-1" aria-labelledby="precautionModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="precautionModalLabel">Precaution</h5>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for precaution in my_precautions %}
+                        <li class="list-group-item">{{ precaution }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Medications Modal -->
+    <div class="modal fade" id="medicationsModal" tabindex="-1" aria-labelledby="medicationsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="medicationsModalLabel">Medications</h5>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for i in dis_med %}
+                        <li class="list-group-item">{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workouts Modal -->
+    <div class="modal fade" id="workoutsModal" tabindex="-1" aria-labelledby="workoutsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="workoutsModalLabel">Workouts</h5>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for i in dis_wrkout %}
+                        <li class="list-group-item">{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diets Modal -->
+    <div class="modal fade" id="dietsModal" tabindex="-1" aria-labelledby="dietsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="dietsModalLabel">Diets</h5>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for i in dis_diet %}
+                        <li class="list-group-item">{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 
 <!-- Load JavaScript files at the end of the body to prevent blocking -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
-<!--navbar profile dropdown menu show/hide-->
+
 <script>
-  document.getElementById('user-menu-button').addEventListener('click', function (event) {
-    event.stopPropagation();
-    var dropdownMenu = document.getElementById('dropdown-menu');
-    dropdownMenu.classList.toggle('show');
-  });
+    <!--navbar profile dropdown menu show/hide-->
 
-  window.addEventListener('click', function(event) {
-    var dropdownMenu = document.getElementById('dropdown-menu');
-    var userMenuButton = document.getElementById('user-menu-button');
-    if (!userMenuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-      dropdownMenu.classList.remove('show');
-    }
-  });
+    document.getElementById('user-menu-button').addEventListener('click', function (event) {
+      event.stopPropagation();
+      var dropdownMenu = document.getElementById('dropdown-menu');
+      dropdownMenu.classList.toggle('show');
+    });
 
-  // JavaScript to show loader until page is fully loaded
-  window.addEventListener('load', function() {
-    var loader = document.getElementById('loader');
-    var content = document.getElementById('content');
-    loader.style.display = 'none'; // Hide loader
-    content.style.visibility = 'visible'; // Show content
-    document.body.classList.remove('loading'); // Remove loading class from body
-  });
-
-  // Highlight active nav link based on current URL
-  document.addEventListener('DOMContentLoaded', function() {
-    var currentPath = window.location.pathname;
-    var navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(function(link) {
-      if (link.getAttribute('href') === currentPath) {
-        link.classList.add('active-nav');
+    window.addEventListener('click', function(event) {
+      var dropdownMenu = document.getElementById('dropdown-menu');
+      var userMenuButton = document.getElementById('user-menu-button');
+      if (!userMenuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+        dropdownMenu.classList.remove('show');
       }
     });
-  });
+
+  <!--show loader until page is fully loaded-->
+
+    window.addEventListener('load', function() {
+      var loader = document.getElementById('loader');
+      var content = document.getElementById('content');
+      loader.style.display = 'none'; // Hide loader
+      content.style.visibility = 'visible'; // Show content
+      document.body.classList.remove('loading'); // Remove loading class from body
+    });
+
+  <!-- Highlight active nav link based on current URL-->
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var currentPath = window.location.pathname;
+      var navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(function(link) {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active-nav');
+        }
+      });
+    });
+
+  <!-- Toggle mobile menu-->
+
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      var mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('show');
+    });
 </script>
 
 </body>

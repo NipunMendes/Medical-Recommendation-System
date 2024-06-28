@@ -16,6 +16,7 @@ svc = pickle.load(open('models/svc.pkl', 'rb'))
 
 app = Flask(__name__)
 
+
 # Helper functions
 def helper(dis):
     desc = description[description['Disease'] == dis]['Description']
@@ -33,6 +34,7 @@ def helper(dis):
     wrkout = workout[workout['disease'] == dis]['workout']
 
     return desc, pre, med, die, wrkout
+
 
 symptoms_dict = {
     'itching': 0, 'skin_rash': 1, 'nodal_skin_eruptions': 2, 'continuous_sneezing': 3, 'shivering': 4, 'chills': 5,
@@ -78,12 +80,14 @@ diseases_list = {
     35: 'Psoriasis', 27: 'Impetigo'
 }
 
+
 # Model Prediction function
 def get_predicted_value(patient_symptoms):
     input_vector = np.zeros(len(symptoms_dict))
     for item in patient_symptoms:
         input_vector[symptoms_dict[item]] = 1
     return diseases_list[svc.predict([input_vector])[0]]
+
 
 # Create routes
 @app.route('/')
@@ -109,8 +113,18 @@ def predict():
         try:
             predicted_disease = get_predicted_value(user_symptoms)
             desc, pre, med, die, wrkout = helper(predicted_disease)
+
+            # Process precautions into my_precautions
+            my_precautions = []
+            for i in pre[0]:
+                my_precautions.append(i)
+
+            # my_medications = []
+            # for i in med[0]:
+            #     my_medications.append(i)
+
             return render_template('index.html', predicted_disease=predicted_disease, dis_des=desc, dis_pre=pre,
-                                   dis_med=med, dis_die=die, dis_wrkout=wrkout)
+                                   dis_med=med, dis_diet=die, dis_wrkout=wrkout, my_precautions=my_precautions)
         except KeyError as e:
             return render_template('index.html',
                                    error=f"Symptom '{str(e)}' not recognized. Please enter valid symptoms.")
@@ -122,17 +136,21 @@ def predict():
 def index():
     return render_template('index.html')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 @app.route('/blog')
 def blog():
     return render_template('blog.html')
 
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
 
 # Python main
 if __name__ == "__main__":
