@@ -194,7 +194,7 @@ footer a:hover {
         <div class="form-group">
             <label for="symptoms" class="fw-semi-bold fs-4 mb-3">Type Your Symptoms Here 👇🏻</label>
             <input type="text" class="form-control custom-rounded" name="symptoms"
-                   placeholder="Type symptoms like coughing,vomiting,itching...">
+                   placeholder="Type symptoms as example coughing, vomiting ...">
         </div>
         <br>
         <button class="btn btn-primary rounded-pill">Check Recommendations</button>
@@ -415,6 +415,9 @@ footer a:hover {
     <!--If the previous word ends with a comma, the space is retained.-->
     <script>
     function replaceSpaces() {
+        var inputField = document.getElementsByName('symptoms')[0];
+        inputField.value = inputField.value.toLowerCase();
+
         var inputField = document.getElementsByName('symptoms')[0];
         inputField.value = inputField.value.split(' ').map(function(word, index, array) {
             // Replace space with underscore if the previous character is not a comma
