@@ -188,23 +188,23 @@ footer a:hover {
         Check Your Health Issues
     </h1>
 
-    <div class="container mt-4 my-4"
-         style="background:darkslategray; color:white; border-radius:35px; max-width: 800px; padding:50px;">
-        <form action="/predict" method="post">
-            <div class="form-group">
-                <label for="symptoms" class="fw-semi-bold fs-4 mb-3">Type Your Symptoms Here 👇🏻</label>
-                <input type="text" class="form-control custom-rounded" name="symptoms"
-                       placeholder="Type symptoms like coughing,vomiting,itching...">
-            </div>
-            <br>
-            <button class="btn btn-primary rounded-pill">Check Recommendations</button>
-            {% if error %}
-            <div class="alert alert-danger mt-3" role="alert">
-                {{ error }}
-            </div>
-            {% endif %}
-        </form>
-    </div>
+<div class="container mt-4 my-4"
+     style="background:darkslategray; color:white; border-radius:35px; max-width: 800px; padding:50px;">
+    <form action="/predict" method="post" onsubmit="replaceSpaces()">
+        <div class="form-group">
+            <label for="symptoms" class="fw-semi-bold fs-4 mb-3">Type Your Symptoms Here 👇🏻</label>
+            <input type="text" class="form-control custom-rounded" name="symptoms"
+                   placeholder="Type symptoms like coughing,vomiting,itching...">
+        </div>
+        <br>
+        <button class="btn btn-primary rounded-pill">Check Recommendations</button>
+        {% if error %}
+        <div class="alert alert-danger mt-3" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+    </form>
+</div>
 
     {% if predicted_disease %}
     <!-- Results -->
@@ -405,59 +405,76 @@ footer a:hover {
       </div>
   </footer>
 
-<!-- Load JavaScript files at the end of the body to prevent blocking -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <!-- Load JavaScript files at the end of the body to prevent blocking -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+
+    <!--If the previous word does not end with a comma, the space before the current word is replaced with an underscore.-->
+    <!--If the previous word ends with a comma, the space is retained.-->
+    <script>
+    function replaceSpaces() {
+        var inputField = document.getElementsByName('symptoms')[0];
+        inputField.value = inputField.value.split(' ').map(function(word, index, array) {
+            // Replace space with underscore if the previous character is not a comma
+            if (index > 0 && array[index - 1].slice(-1) !== ',') {
+                return '_' + word;
+            } else {
+                return word;
+            }
+        }).join('');
+    }
+    </script>
 
 
-<script>
-    <!--navbar profile dropdown menu show/hide-->
 
-    document.getElementById('user-menu-button').addEventListener('click', function (event) {
-      event.stopPropagation();
-      var dropdownMenu = document.getElementById('dropdown-menu');
-      dropdownMenu.classList.toggle('show');
-    });
+    <script>
+        <!--navbar profile dropdown menu show/hide-->
 
-    window.addEventListener('click', function(event) {
-      var dropdownMenu = document.getElementById('dropdown-menu');
-      var userMenuButton = document.getElementById('user-menu-button');
-      if (!userMenuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-        dropdownMenu.classList.remove('show');
-      }
-    });
+        document.getElementById('user-menu-button').addEventListener('click', function (event) {
+          event.stopPropagation();
+          var dropdownMenu = document.getElementById('dropdown-menu');
+          dropdownMenu.classList.toggle('show');
+        });
 
-  <!--show loader until page is fully loaded-->
+        window.addEventListener('click', function(event) {
+          var dropdownMenu = document.getElementById('dropdown-menu');
+          var userMenuButton = document.getElementById('user-menu-button');
+          if (!userMenuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.remove('show');
+          }
+        });
 
-    window.addEventListener('load', function() {
-      var loader = document.getElementById('loader');
-      var content = document.getElementById('content');
-      loader.style.display = 'none'; // Hide loader
-      content.style.visibility = 'visible'; // Show content
-      document.body.classList.remove('loading'); // Remove loading class from body
-    });
+      <!--show loader until page is fully loaded-->
 
-  <!-- Highlight active nav link based on current URL-->
+        window.addEventListener('load', function() {
+          var loader = document.getElementById('loader');
+          var content = document.getElementById('content');
+          loader.style.display = 'none'; // Hide loader
+          content.style.visibility = 'visible'; // Show content
+          document.body.classList.remove('loading'); // Remove loading class from body
+        });
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var currentPath = window.location.pathname;
-      var navLinks = document.querySelectorAll('.nav-link');
-      navLinks.forEach(function(link) {
-        if (link.getAttribute('href') === currentPath) {
-          link.classList.add('active-nav');
-        }
-      });
-    });
+      <!-- Highlight active nav link based on current URL-->
 
-  <!-- Toggle mobile menu-->
+        document.addEventListener('DOMContentLoaded', function() {
+          var currentPath = window.location.pathname;
+          var navLinks = document.querySelectorAll('.nav-link');
+          navLinks.forEach(function(link) {
+            if (link.getAttribute('href') === currentPath) {
+              link.classList.add('active-nav');
+            }
+          });
+        });
 
-    document.getElementById('mobile-menu-button').addEventListener('click', function() {
-      var mobileMenu = document.getElementById('mobile-menu');
-      mobileMenu.classList.toggle('show');
-    });
-</script>
+      <!-- Toggle mobile menu-->
+
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+          var mobileMenu = document.getElementById('mobile-menu');
+          mobileMenu.classList.toggle('show');
+        });
+    </script>
 
 </body>
 </html>
