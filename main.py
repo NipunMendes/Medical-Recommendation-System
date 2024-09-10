@@ -12,7 +12,7 @@ medications = pd.read_csv('datasets/medications.csv')
 diets = pd.read_csv('datasets/diets.csv')
 
 # Load model
-svc = pickle.load(open('models/svc.pkl', 'rb'))
+svc = pickle.load(open('models/submission.pkl', 'rb'))
 
 app = Flask(__name__)
 
