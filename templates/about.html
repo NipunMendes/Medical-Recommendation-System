@@ -94,7 +94,7 @@
 
 <div id="content">
     <!--navbar-->
-    <nav class="bg-gray-800">
+     <nav class="bg-gray-800">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
                 <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -123,8 +123,6 @@
                     </div>
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
-                            <a href="/"
-                               class="nav-link rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</a>
                             <a href="/index"
                                class="nav-link rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Check
                                 Diseases</a>
@@ -134,15 +132,22 @@
                         </div>
                     </div>
                 </div>
-                <!-- Profile dropdown -->
-                <div class="relative ml-3">
-                    <div>
-                        <button type="button"
-                                class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                        </button>
-                    </div>
-                </div>
+<!-- Profile dropdown -->
+<div class="relative ml-3 flex items-center">
+    <!-- Profile button -->
+    <div>
+        <button type="button"
+                class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+            <!-- You can add an icon or profile picture here -->
+        </button>
+    </div>
+
+    <!-- Logout button -->
+    <div class="ml-4">
+        <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+</div>
             </div>
         </div>
 

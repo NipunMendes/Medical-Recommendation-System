@@ -129,13 +129,6 @@ def authenticate_user(username, password):
 
 
 # Routes
-@app.route('/')
-def home():
-    if 'username' in session:
-        return redirect(url_for('index'))
-    return redirect(url_for('login'))
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -148,6 +141,11 @@ def login():
             flash('Invalid username or password')
     return render_template('login.html')
 
+@app.route('/')
+def home():
+    if 'username' in session:
+        return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
