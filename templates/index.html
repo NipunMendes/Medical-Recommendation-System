@@ -155,14 +155,22 @@ footer a:hover {
                         </div>
                     </div>
                 </div>
-                <!-- Profile dropdown -->
-                <div class="relative ml-3">
-                    <div>
-                        <button type="button"
-                                class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                        </button>
-                    </div>
+<!-- Profile dropdown -->
+<div class="relative ml-3 flex items-center">
+    <!-- Profile button -->
+    <div>
+        <button type="button"
+                class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+            <!-- You can add an icon or profile picture here -->
+        </button>
+    </div>
+
+    <!-- Logout button -->
+    <div class="ml-4">
+        <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+</div>
                 </div>
             </div>
         </div>
@@ -190,7 +198,7 @@ footer a:hover {
 
 <div class="container mt-4 my-4"
      style="background:darkslategray; color:white; border-radius:35px; max-width: 800px; padding:50px;">
-    <form action="/predict" method="post" onsubmit="replaceSpaces()">
+    <form action="/index" method="post" onsubmit="replaceSpaces()">
         <div class="form-group">
             <label for="symptoms" class="fw-semi-bold fs-4 mb-3">Type Your Symptoms Here 👇🏻</label>
             <input type="text" class="form-control custom-rounded" name="symptoms"

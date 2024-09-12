@@ -1,7 +1,10 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for, session, flash
 import numpy as np
 import pandas as pd
 import pickle
+import os
+import mysql.connector
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Load database
 sys_des = pd.read_csv('datasets/symtoms_df.csv')
@@ -15,6 +18,19 @@ diets = pd.read_csv('datasets/diets.csv')
 svc = pickle.load(open('models/submission.pkl', 'rb'))
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24).hex()
+
+# MySQL configuration
+db_config = {
+    'user': 'root',
+    'password': '',
+    'host': 'localhost',
+    'database': 'medical_app'
+}
+
+
+def get_db_connection():
+    return mysql.connector.connect(**db_config)
 
 
 # Helper functions
@@ -39,7 +55,7 @@ def helper(dis):
 symptoms_dict = {
     'itching': 0, 'skin_rash': 1, 'nodal_skin_eruptions': 2, 'continuous_sneezing': 3, 'shivering': 4, 'chills': 5,
     'joint_pain': 6, 'stomach_pain': 7, 'acidity': 8, 'ulcers_on_tongue': 9, 'muscle_wasting': 10, 'vomiting': 11,
-    'burning_micturition': 12, 'spotting_ urination': 13, 'fatigue': 14, 'weight_gain': 15, 'anxiety': 16,
+    'burning_micturition': 12, 'spotting_urination': 13, 'fatigue': 14, 'weight_gain': 15, 'anxiety': 16,
     'cold_hands_and_feets': 17, 'mood_swings': 18, 'weight_loss': 19, 'restlessness': 20, 'lethargy': 21,
     'patches_in_throat': 22, 'irregular_sugar_level': 23, 'cough': 24, 'high_fever': 25, 'sunken_eyes': 26,
     'breathlessness': 27, 'sweating': 28, 'dehydration': 29, 'indigestion': 30, 'headache': 31, 'yellowish_skin': 32,
@@ -55,9 +71,9 @@ symptoms_dict = {
     'drying_and_tingling_lips': 76, 'slurred_speech': 77, 'knee_pain': 78, 'hip_joint_pain': 79, 'muscle_weakness': 80,
     'stiff_neck': 81, 'swelling_joints': 82, 'movement_stiffness': 83, 'spinning_movements': 84, 'loss_of_balance': 85,
     'unsteadiness': 86, 'weakness_of_one_body_side': 87, 'loss_of_smell': 88, 'bladder_discomfort': 89,
-    'foul_smell_of urine': 90, 'continuous_feel_of_urine': 91, 'passage_of_gases': 92, 'internal_itching': 93,
+    'foul_smell_of_urine': 90, 'continuous_feel_of_urine': 91, 'passage_of_gases': 92, 'internal_itching': 93,
     'toxic_look_(typhos)': 94, 'depression': 95, 'irritability': 96, 'muscle_pain': 97, 'altered_sensorium': 98,
-    'red_spots_over_body': 99, 'belly_pain': 100, 'abnormal_menstruation': 101, 'dischromic _patches': 102,
+    'red_spots_over_body': 99, 'belly_pain': 100, 'abnormal_menstruation': 101, 'dischromic_patches': 102,
     'watering_from_eyes': 103, 'increased_appetite': 104, 'polyuria': 105, 'family_history': 106, 'mucoid_sputum': 107,
     'rusty_sputum': 108, 'lack_of_concentration': 109, 'visual_disturbances': 110, 'receiving_blood_transfusion': 111,
     'receiving_unsterile_injections': 112, 'coma': 113, 'stomach_bleeding': 114, 'distention_of_abdomen': 115,
@@ -72,12 +88,11 @@ diseases_list = {
     15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic cholestasis', 14: 'Drug Reaction',
     33: 'Peptic ulcer disease', 1: 'AIDS', 12: 'Diabetes', 17: 'Gastroenteritis', 6: 'Bronchial Asthma',
     23: 'Hypertension', 30: 'Migraine', 7: 'Cervical spondylosis', 32: 'Paralysis (brain hemorrhage)',
-    28: 'Jaundice', 29: 'Malaria', 8: 'Chicken pox', 11: 'Dengue', 37: 'Typhoid', 40: 'hepatitis A',
+    28: 'Jaundice', 29: 'Malaria', 8: 'Chicken pox', 11: 'Dengue', 37: 'Typhoid', 40: 'Hepatitis A',
     19: 'Hepatitis B', 20: 'Hepatitis C', 21: 'Hepatitis D', 22: 'Hepatitis E', 3: 'Alcoholic hepatitis',
     36: 'Tuberculosis', 10: 'Common Cold', 34: 'Pneumonia', 13: 'Dimorphic hemorrhoids (piles)', 18: 'Heart attack',
     39: 'Varicose veins', 26: 'Hypothyroidism', 24: 'Hyperthyroidism', 25: 'Hypoglycemia', 31: 'Osteoarthritis',
-    5: 'Arthritis', 0: '(vertigo) Paroymsal Positional Vertigo', 2: 'Acne', 38: 'Urinary tract infection',
-    35: 'Psoriasis', 27: 'Impetigo'
+    5: 'Arthritis', 0: 'Vertigo', 2: 'Acne', 38: 'Urinary tract infection', 35: 'Psoriasis', 27: 'Impetigo'
 }
 
 
@@ -85,71 +100,111 @@ diseases_list = {
 def get_predicted_value(patient_symptoms):
     input_vector = np.zeros(len(symptoms_dict))
     for item in patient_symptoms:
-        input_vector[symptoms_dict[item]] = 1
+        if item in symptoms_dict:
+            input_vector[symptoms_dict[item]] = 1
     return diseases_list[svc.predict([input_vector])[0]]
 
 
-# Create routes
+# User Authentication functions
+def register_user(username, password):
+    hashed_password = generate_password_hash(password)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, hashed_password))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+def authenticate_user(username, password):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if user and check_password_hash(user['password'], password):
+        return True
+    return False
+
+
+# Routes
 @app.route('/')
 def home():
-    return render_template('home.html')
+    if 'username' in session:
+        return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
-@app.route('/predict', methods=['GET', 'POST'])
-def predict():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if authenticate_user(username, password):
+            session['username'] = username
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password')
+    return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username and password:
+            register_user(username, password)
+            flash('Registration successful! Please log in.')
+            return redirect(url_for('login'))
+    return render_template('register.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
+
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    logged_in_user = session.get('username')  # Get the logged-in user's username
+
     if request.method == 'POST':
         symptoms = request.form.get('symptoms')
         if not symptoms.strip():  # Check if symptoms is empty or contains only whitespace
-            return render_template('index.html', error="Please enter your symptoms.")
+            return render_template('index.html', error="Please enter your symptoms.", logged_in_user=logged_in_user)
 
         user_symptoms = [s.strip() for s in symptoms.split(',')]
-        # Remove any extra characters, if any
         user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
 
-        # Check if any valid symptoms were entered
         if not user_symptoms or all(symptom == '' for symptom in user_symptoms):
-            return render_template('index.html', error="Please enter valid symptoms.")
+            return render_template('index.html', error="Please enter valid symptoms.", logged_in_user=logged_in_user)
 
         try:
             predicted_disease = get_predicted_value(user_symptoms)
             desc, pre, med, die, wrkout = helper(predicted_disease)
 
             # Process precautions into my_precautions
-            my_precautions = []
-            for i in pre[0]:
-                my_precautions.append(i)
-
-            # my_medications = []
-            # for i in med[0]:
-            #     my_medications.append(i)
+            my_precautions = [i for i in pre[0] if i]
 
             return render_template('index.html', predicted_disease=predicted_disease, dis_des=desc, dis_pre=pre,
-                                   dis_med=med, dis_diet=die, dis_wrkout=wrkout, my_precautions=my_precautions)
+                                   dis_med=med, dis_diet=die, dis_wrkout=wrkout, my_precautions=my_precautions, logged_in_user=logged_in_user)
         except KeyError as e:
             return render_template('index.html',
-                                   error=f"Symptom '{str(e)}' not recognized. Please enter valid symptoms.")
-
-    return render_template('index.html')
-
-
-@app.route('/index')
-def index():
-    return render_template('index.html')
+                                   error=f"Symptom '{str(e)}' not recognized. Please enter valid symptoms.",
+                                   logged_in_user=logged_in_user)
+    return render_template('index.html', logged_in_user=logged_in_user)
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
-
-
-@app.route('/blog')
-def blog():
-    return render_template('blog.html')
-
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
+    logged_in_user = session.get('username')  # Get the logged-in user's username
+    return render_template('about.html', logged_in_user=logged_in_user)
 
 
 # Python main
