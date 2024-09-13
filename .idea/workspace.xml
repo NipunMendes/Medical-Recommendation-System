@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc918914-65ca-4c72-bb95-efc24159c067" name="Changes" comment="initial commit">
-      <change afterPath="$PROJECT_DIR$/test_app.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_front.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,9 +17,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Unit Test" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -48,6 +48,7 @@
     "Python tests.Python tests for test_app.FlaskAppTestCase.test_prediction.executor": "Run",
     "Python tests.Python tests for test_app.FlaskAppTestCase.test_register.executor": "Run",
     "Python tests.Python tests for test_app.FlaskAppTests.executor": "Run",
+    "Python tests.Python tests for test_front.FrontendTestCase.executor": "Run",
     "Python tests.Python tests for tests.FlaskAppTestCase.executor": "Run",
     "Python tests.Python tests for tests.FlaskAppTestCase.test_helper_function.executor": "Run",
     "Python tests.Python tests for tests.FlaskAppTestCase.test_home_redirect.executor": "Run",
@@ -70,7 +71,29 @@
       <recent name="C:\Users\Nipun Mendes\Documents\GitHub\Medical Recommendation Sys\models" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_app.FlaskAppTestCase">
+  <component name="RunManager" selected="Python tests.Python tests for test_front.FrontendTestCase">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Medical Recommendation Sys" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests for test_app.FlaskAppTestCase" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="Medical Recommendation Sys" />
       <option name="ENV_FILES" value="" />
@@ -83,21 +106,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;test_app.FlaskAppTestCase&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_app.FlaskAppTestCase.test_helper_function" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="Medical Recommendation Sys" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_app.FlaskAppTestCase.test_helper_function&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -116,21 +124,6 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_app.FlaskAppTestCase.test_prediction" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="Medical Recommendation Sys" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_app.FlaskAppTestCase.test_prediction&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <configuration name="Python tests for test_app.FlaskAppTestCase.test_register" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="Medical Recommendation Sys" />
       <option name="ENV_FILES" value="" />
@@ -146,13 +139,28 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for test_front.FrontendTestCase" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="Medical Recommendation Sys" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_front.FrontendTestCase&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_front.FrontendTestCase" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python tests.Python tests for test_app.FlaskAppTestCase" />
         <item itemvalue="Python tests.Python tests for test_app.FlaskAppTestCase.test_register" />
         <item itemvalue="Python tests.Python tests for test_app.FlaskAppTestCase.test_login_correct" />
-        <item itemvalue="Python tests.Python tests for test_app.FlaskAppTestCase.test_helper_function" />
-        <item itemvalue="Python tests.Python tests for test_app.FlaskAppTestCase.test_prediction" />
       </list>
     </recent_temporary>
   </component>
