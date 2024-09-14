@@ -107,13 +107,24 @@ def get_predicted_value(patient_symptoms):
 
 # User Authentication functions
 def register_user(username, password):
-    hashed_password = generate_password_hash(password)
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
+
+    # Check if username already exists
+    cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        return False  # Username exists, return False to indicate failure
+
+    # If username does not exist, register the user
+    hashed_password = generate_password_hash(password)
     cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, hashed_password))
     conn.commit()
+
     cursor.close()
     conn.close()
+    return True  # User registered successfully
 
 
 def authenticate_user(username, password):
@@ -147,15 +158,22 @@ def home():
         return redirect(url_for('index'))
     return redirect(url_for('login'))
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
         if username and password:
-            register_user(username, password)
-            flash('Registration successful! Please log in.')
-            return redirect(url_for('login'))
+            # Check if registration is successful or username already exists
+            if register_user(username, password):
+                session.pop('_flashes', None)  # Clear any previous flash messages
+                flash('Registration successful! Please log in.')
+                return redirect(url_for('login'))
+            else:
+                flash('Username already exists. Please choose a different one.')
+
     return render_template('register.html')
 
 
@@ -174,14 +192,21 @@ def index():
 
     if request.method == 'POST':
         symptoms = request.form.get('symptoms')
+
         if not symptoms.strip():  # Check if symptoms is empty or contains only whitespace
             return render_template('index.html', error="Please enter your symptoms.", logged_in_user=logged_in_user)
 
         user_symptoms = [s.strip() for s in symptoms.split(',')]
         user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
 
-        if not user_symptoms or all(symptom == '' for symptom in user_symptoms):
-            return render_template('index.html', error="Please enter valid symptoms.", logged_in_user=logged_in_user)
+        # Check for invalid symptoms
+        invalid_symptoms = [symptom for symptom in user_symptoms if symptom not in symptoms_dict]
+
+        if invalid_symptoms:
+            invalid_symptoms_str = ", ".join(invalid_symptoms)
+            return render_template('index.html',
+                                   error=f"Symptom(s) '{invalid_symptoms_str}' not recognized. Please enter valid symptoms.",
+                                   logged_in_user=logged_in_user)
 
         try:
             predicted_disease = get_predicted_value(user_symptoms)
@@ -191,11 +216,13 @@ def index():
             my_precautions = [i for i in pre[0] if i]
 
             return render_template('index.html', predicted_disease=predicted_disease, dis_des=desc, dis_pre=pre,
-                                   dis_med=med, dis_diet=die, dis_wrkout=wrkout, my_precautions=my_precautions, logged_in_user=logged_in_user)
+                                   dis_med=med, dis_diet=die, dis_wrkout=wrkout, my_precautions=my_precautions,
+                                   logged_in_user=logged_in_user)
         except KeyError as e:
             return render_template('index.html',
                                    error=f"Symptom '{str(e)}' not recognized. Please enter valid symptoms.",
                                    logged_in_user=logged_in_user)
+
     return render_template('index.html', logged_in_user=logged_in_user)
 
 
